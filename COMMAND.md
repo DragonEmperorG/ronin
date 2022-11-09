@@ -1,0 +1,1 @@
+* Example testing command: ```python ronin_resnet.py --mode test --test_list D:\GithubRepositories\ronin\lists\list_test_unseen.txt --root_dir D:\GithubRepositories\ronin\datasets\Data\unseen_subjects_test_set --out_dir D:\GithubRepositories\ronin\output --model_path D:\GithubRepositories\ronin\datasets\Pretrained_Models\ronin_resnet\checkpoint_gsn_latest.pt```.`
