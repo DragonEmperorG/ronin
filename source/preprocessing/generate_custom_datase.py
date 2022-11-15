@@ -10,6 +10,7 @@ import pandas
 import scipy.interpolate
 
 sys.path.append(osp.join(osp.dirname(osp.abspath(__file__)), '..'))
+from data_custom import CustomData
 from math_util import interpolate_quaternion_linear
 from preprocessing.write_trajectory_to_ply import write_ply_to_file
 
@@ -93,6 +94,7 @@ if __name__ == '__main__':
 
     total_length = 0.0
     length_dict = {}
+
     for dataset in dataset_list:
         if len(dataset.strip()) == 0:
             continue
@@ -116,23 +118,8 @@ if __name__ == '__main__':
 
             reference_time = 0
             source_all = source_vector.union(source_quaternion)
-            for source in source_all:
-                try:
-                    source_data = np.genfromtxt(osp.join(data_root, source + '.txt'))
-                    source_data[:, 0] = (source_data[:, 0] - reference_time) / _nano_to_sec
-                    all_sources[source] = source_data
-                except OSError:
-                    print('Can not find file for source {}. Please check the dataset.'.format(source))
-                    exit(1)
-
-            if osp.exists(osp.join(data_root, 'pose.txt')):
-                source_data = np.genfromtxt(osp.join(data_root, 'pose.txt'))
-                source_data[:, 0] = (source_data[:, 0] - reference_time) / _nano_to_sec
-                all_sources['pose'] = source_data
-            if osp.exists(osp.join(data_root, 'pose_adf.txt')):
-                source_data = np.genfromtxt(osp.join(data_root, 'pose_adf.txt'))
-                source_data[:, 0] = (source_data[:, 0] - reference_time) / _nano_to_sec
-                all_sources['pose_adf'] = source_data
+            source_data_file_path = osp.join(data_root, 'trainVdrExperimentTimeTable.txt')
+            all_sources = CustomData.parse(source_data_file_path, source_all)
 
             for src_id, src in all_sources.items():
                 print('Source: %s,  start time: %d, end time: %d' % (src_id, src[0, 0], src[-1, 0]))
