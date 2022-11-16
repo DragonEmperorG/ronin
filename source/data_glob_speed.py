@@ -43,6 +43,7 @@ class GlobSpeedSequence(CompiledSequence):
             data_path, self.max_ori_error, self.grv_only)
 
         with h5py.File(osp.join(data_path, 'data.hdf5')) as f:
+            #
             gyro_uncalib = f['synced/gyro_uncalib']
             acce_uncalib = f['synced/acce']
             gyro = gyro_uncalib - np.array(self.info['imu_init_gyro_bias'])

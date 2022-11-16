@@ -1,6 +1,7 @@
 import pandas as pd
 
-from time_utils import custom_timestamp_parser
+from os import path as osp
+from time_utils import custom_timestamp_sec_parser, custom_timestamp_nano_parser
 
 
 class CustomData:
@@ -124,7 +125,8 @@ class CustomData:
     ]
 
     @staticmethod
-    def parse(path, source_all):
+    def parse(folder, source_all):
+        path = osp.join(folder, 'trainVdrExperimentTimeTable.txt')
         custom_raw_data = pd.read_csv(
             path,
             header=0,
@@ -132,19 +134,33 @@ class CustomData:
         )
         custom_parse_data = custom_raw_data.copy(deep=True)
         custom_parse_data[CustomData._DATA_TIMESTAMP] = custom_parse_data[CustomData._DATA_TIMESTAMP] \
-            .map(custom_timestamp_parser)
+            .map(custom_timestamp_sec_parser)
+
+        custom_write_data = custom_raw_data.copy(deep=True)
+        custom_write_data[CustomData._DATA_TIMESTAMP] = custom_write_data[CustomData._DATA_TIMESTAMP] \
+            .map(custom_timestamp_nano_parser)
 
         all_sources = {}
         for source in source_all:
             if source == 'gyro':
-                source_rv = custom_parse_data.loc[
+                source_gyro = custom_parse_data.loc[
                               :,
                               [CustomData._DATA_TIMESTAMP,
                                CustomData._PHONE_GYROSCOPE_X,
                                CustomData._PHONE_GYROSCOPE_Y,
                                CustomData._PHONE_GYROSCOPE_Z]
                               ]
-                all_sources['gyro'] = source_rv.to_numpy()
+                all_sources['gyro'] = source_gyro.to_numpy()
+
+                source_gyro_write = custom_write_data.loc[
+                              :,
+                              [CustomData._DATA_TIMESTAMP,
+                               CustomData._PHONE_GYROSCOPE_X,
+                               CustomData._PHONE_GYROSCOPE_Y,
+                               CustomData._PHONE_GYROSCOPE_Z]
+                              ]
+                source_gyro_write_path = osp.join(folder, 'gyro.txt')
+                source_gyro_write.to_csv(source_gyro_write_path, sep=' ', header=False, index=False)
 
             if source == 'gyro_uncalib':
                 source_gyro_uncalib = custom_parse_data.loc[
@@ -156,6 +172,16 @@ class CustomData:
                               ]
                 all_sources['gyro_uncalib'] = source_gyro_uncalib.to_numpy()
 
+                source_gyro_uncalib_write = custom_write_data.loc[
+                                      :,
+                                      [CustomData._DATA_TIMESTAMP,
+                                       CustomData._PHONE_GYROSCOPE_UNCALIBRATED_X,
+                                       CustomData._PHONE_GYROSCOPE_UNCALIBRATED_Y,
+                                       CustomData._PHONE_GYROSCOPE_UNCALIBRATED_Z]
+                                      ]
+                source_gyro_uncalib_write_path = osp.join(folder, 'gyro_uncalib.txt')
+                source_gyro_uncalib_write.to_csv(source_gyro_uncalib_write_path, sep=' ', header=False, index=False)
+
             if source == 'acce':
                 source_acce = custom_parse_data.loc[
                               :,
@@ -165,6 +191,16 @@ class CustomData:
                                CustomData._PHONE_ACCELEROMETER_Z]
                               ]
                 all_sources['acce'] = source_acce.to_numpy()
+
+                source_acce_write = custom_write_data.loc[
+                              :,
+                              [CustomData._DATA_TIMESTAMP,
+                               CustomData._PHONE_ACCELEROMETER_X,
+                               CustomData._PHONE_ACCELEROMETER_Y,
+                               CustomData._PHONE_ACCELEROMETER_Z]
+                              ]
+                source_acce_write_path = osp.join(folder, 'acce.txt')
+                source_acce_write.to_csv(source_acce_write_path, sep=' ', header=False, index=False)
 
             if source == 'linacce':
                 source_linacce = custom_parse_data.loc[
@@ -176,6 +212,16 @@ class CustomData:
                               ]
                 all_sources['linacce'] = source_linacce.to_numpy()
 
+                source_linacce_write = custom_write_data.loc[
+                                 :,
+                                 [CustomData._DATA_TIMESTAMP,
+                                  CustomData._PHONE_LINEAR_ACCELERATION_X,
+                                  CustomData._PHONE_LINEAR_ACCELERATION_Y,
+                                  CustomData._PHONE_LINEAR_ACCELERATION_Z]
+                                 ]
+                source_linacce_write_path = osp.join(folder, 'linacce.txt')
+                source_linacce_write.to_csv(source_linacce_write_path, sep=' ', header=False, index=False)
+
             if source == 'gravity':
                 source_gravity = custom_parse_data.loc[
                               :,
@@ -186,6 +232,16 @@ class CustomData:
                               ]
                 all_sources['gravity'] = source_gravity.to_numpy()
 
+                source_gravity_write = custom_write_data.loc[
+                                 :,
+                                 [CustomData._DATA_TIMESTAMP,
+                                  CustomData._PHONE_GRAVITY_X,
+                                  CustomData._PHONE_GRAVITY_Y,
+                                  CustomData._PHONE_GRAVITY_Z]
+                                 ]
+                source_gravity_write_path = osp.join(folder, 'gravity.txt')
+                source_gravity_write.to_csv(source_gravity_write_path, sep=' ', header=False, index=False)
+
             if source == 'magnet':
                 source_magnet = custom_parse_data.loc[
                               :,
@@ -195,6 +251,16 @@ class CustomData:
                                CustomData._PHONE_MAGNETIC_FIELD_Z]
                               ]
                 all_sources['magnet'] = source_magnet.to_numpy()
+
+                source_magnet_write = custom_write_data.loc[
+                                :,
+                                [CustomData._DATA_TIMESTAMP,
+                                 CustomData._PHONE_MAGNETIC_FIELD_X,
+                                 CustomData._PHONE_MAGNETIC_FIELD_Y,
+                                 CustomData._PHONE_MAGNETIC_FIELD_Z]
+                                ]
+                source_magnet_write_path = osp.join(folder, 'magnet.txt')
+                source_magnet_write.to_csv(source_magnet_write_path, sep=' ', header=False, index=False)
 
             if source == 'rv':
                 source_rv = custom_parse_data.loc[
@@ -207,6 +273,17 @@ class CustomData:
                               ]
                 all_sources['rv'] = source_rv.to_numpy()
 
+                source_rv_write = custom_write_data.loc[
+                            :,
+                            [CustomData._DATA_TIMESTAMP,
+                             CustomData._PHONE_ROTATION_VECTOR_X,
+                             CustomData._PHONE_ROTATION_VECTOR_Y,
+                             CustomData._PHONE_ROTATION_VECTOR_Z,
+                             CustomData._PHONE_ROTATION_VECTOR_SCALAR]
+                            ]
+                source_rv_write_path = osp.join(folder, 'rv.txt')
+                source_rv_write.to_csv(source_rv_write_path, sep=' ', header=False, index=False)
+
             if source == 'game_rv':
                 source_game_rv = custom_parse_data.loc[
                               :,
@@ -217,5 +294,16 @@ class CustomData:
                                CustomData._PHONE_GAME_ROTATION_VECTOR_SCALAR]
                               ]
                 all_sources['game_rv'] = source_game_rv.to_numpy()
+
+                source_game_rv_write = custom_write_data.loc[
+                                 :,
+                                 [CustomData._DATA_TIMESTAMP,
+                                  CustomData._PHONE_GAME_ROTATION_VECTOR_X,
+                                  CustomData._PHONE_GAME_ROTATION_VECTOR_Y,
+                                  CustomData._PHONE_GAME_ROTATION_VECTOR_Z,
+                                  CustomData._PHONE_GAME_ROTATION_VECTOR_SCALAR]
+                                 ]
+                source_game_rv_write_path = osp.join(folder, 'game_rv.txt')
+                source_game_rv_write.to_csv(source_game_rv_write_path, sep=' ', header=False, index=False)
 
         return all_sources

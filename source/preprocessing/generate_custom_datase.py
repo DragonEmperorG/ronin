@@ -118,8 +118,8 @@ if __name__ == '__main__':
 
             reference_time = 0
             source_all = source_vector.union(source_quaternion)
-            source_data_file_path = osp.join(data_root, 'trainVdrExperimentTimeTable.txt')
-            all_sources = CustomData.parse(source_data_file_path, source_all)
+            source_data_dir = data_root
+            all_sources = CustomData.parse(source_data_dir, source_all)
 
             for src_id, src in all_sources.items():
                 print('Source: %s,  start time: %d, end time: %d' % (src_id, src[0, 0], src[-1, 0]))
