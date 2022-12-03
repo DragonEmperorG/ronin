@@ -283,14 +283,14 @@ def compile_unannotated_sequence(root_dir, data_list, args):
                             'grv_ori_error': 0,
                             'ekf_ori_error': 0,
                             "start_calibration": [
-                                0.0,
                                 1.0,
+                                0.0,
                                 0.0,
                                 0.0
                             ],
                             "end_calibration": [
-                                0.0,
                                 1.0,
+                                0.0,
                                 0.0,
                                 0.0
                             ],
@@ -312,7 +312,10 @@ def compile_unannotated_sequence(root_dir, data_list, args):
 
                 f.create_group('pose')
                 f.create_dataset('pose/tango_pos', data=np.zeros([output_time.shape[0], 3]))
-                f.create_dataset('pose/tango_ori', data=np.zeros([output_time.shape[0], 4]))
+
+                data_pose_tango_ori = np.zeros([output_time.shape[0], 4])
+                data_pose_tango_ori[0, 0:4] = np.array([1.0, 0.0, 0.0, 0.0])
+                f.create_dataset('pose/tango_ori', data=data_pose_tango_ori)
 
         except (OSError, FileNotFoundError, TypeError) as e:
             print(e)
