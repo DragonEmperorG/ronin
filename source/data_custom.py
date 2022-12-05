@@ -306,4 +306,32 @@ class CustomData:
                 source_game_rv_write_path = osp.join(folder, 'game_rv.txt')
                 source_game_rv_write.to_csv(source_game_rv_write_path, sep=' ', header=False, index=False)
 
+            if source == 'pose':
+                source_pose = custom_parse_data.loc[
+                              :,
+                              [CustomData._DATA_TIMESTAMP,
+                               CustomData._ALKAID_PROJECT_COORDINATE_X,
+                               CustomData._ALKAID_PROJECT_COORDINATE_Y,
+                               CustomData._ALKAID_HEIGHT,
+                               CustomData._PHONE_GAME_ROTATION_VECTOR_X,
+                               CustomData._PHONE_GAME_ROTATION_VECTOR_Y,
+                               CustomData._PHONE_GAME_ROTATION_VECTOR_Z,
+                               CustomData._PHONE_GAME_ROTATION_VECTOR_SCALAR]
+                              ]
+                all_sources['pose'] = source_pose.to_numpy()
+
+                source_pose_write = custom_write_data.loc[
+                                       :,
+                                       [CustomData._DATA_TIMESTAMP,
+                                        CustomData._ALKAID_PROJECT_COORDINATE_X,
+                                        CustomData._ALKAID_PROJECT_COORDINATE_Y,
+                                        CustomData._ALKAID_HEIGHT,
+                                        CustomData._PHONE_GAME_ROTATION_VECTOR_X,
+                                        CustomData._PHONE_GAME_ROTATION_VECTOR_Y,
+                                        CustomData._PHONE_GAME_ROTATION_VECTOR_Z,
+                                        CustomData._PHONE_GAME_ROTATION_VECTOR_SCALAR]
+                                       ]
+                source_pose_write_path = osp.join(folder, 'pose.txt')
+                source_pose_write.to_csv(source_pose_write_path, sep=' ', header=False, index=False)
+
         return all_sources

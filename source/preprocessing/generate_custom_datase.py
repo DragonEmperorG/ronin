@@ -115,9 +115,10 @@ if __name__ == '__main__':
             all_sources = {}
             source_vector = {'gyro', 'gyro_uncalib', 'acce', 'linacce', 'gravity', 'magnet'}
             source_quaternion = {'rv', 'game_rv'}
+            source_pose = {'pose'}
 
             reference_time = 0
-            source_all = source_vector.union(source_quaternion)
+            source_all = source_vector.union(source_quaternion).union(source_pose)
             source_data_dir = data_root
             all_sources = CustomData.parse(source_data_dir, source_all)
 

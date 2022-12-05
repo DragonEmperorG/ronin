@@ -14,7 +14,7 @@ import numpy as np
 import quaternion
 from scipy.interpolate import interp1d
 from sklearn import svm
-from sklearn.externals import joblib
+# from sklearn.externals import joblib
 from sklearn.model_selection import GridSearchCV
 
 sys.path.append(osp.join(osp.dirname(osp.abspath(__file__)), '..'))

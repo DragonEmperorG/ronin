@@ -210,7 +210,8 @@ def compile_unannotated_sequence(root_dir, data_list, args):
     """
     source_vector = {'gyro', 'gyro_uncalib', 'acce', 'linacce', 'gravity', 'magnet'}
     source_quaternion = {'game_rv', 'rv'}
-    source_all = source_vector.union(source_quaternion)
+    source_pose = {'pose'}
+    source_all = source_vector.union(source_quaternion).union(source_pose)
     fail_list = []
     for data in data_list:
         try:
@@ -311,8 +312,11 @@ def compile_unannotated_sequence(root_dir, data_list, args):
                         f.create_dataset('synced/' + source, data=processed_sources[source])
 
                 f.create_group('pose')
-                f.create_dataset('pose/tango_pos', data=np.zeros([output_time.shape[0], 3]))
-
+                data_pose_tango_pos = all_sources['pose'][:, 0:4]
+                processed_data_pose_tango_pos = process_data_source(data_pose_tango_pos, output_time, 'vector')
+                data_pose_tango_pos_lower_bound = processed_data_pose_tango_pos.min(0)
+                bounded_processed_data_pose_tango_pos = processed_data_pose_tango_pos - data_pose_tango_pos_lower_bound;
+                f.create_dataset('pose/tango_pos', data=bounded_processed_data_pose_tango_pos)
                 data_pose_tango_ori = np.zeros([output_time.shape[0], 4])
                 data_pose_tango_ori[0, 0:4] = np.array([1.0, 0.0, 0.0, 0.0])
                 f.create_dataset('pose/tango_ori', data=data_pose_tango_ori)
